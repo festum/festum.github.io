@@ -64,7 +64,7 @@ $(window).on("load",function(){
     function( newElements ) {
 
       var $newElems = $( newElements );
-      $newElems.imagesLoaded(function(){  
+      $newElems.imagesLoaded(function(){
         $newElems.animate({ opacity: 1 });
         $container.isotope( 'appended', $newElems );
       });
@@ -196,13 +196,13 @@ $(function(){
     /*=========================================================================
      Progress bar animation with Waypoint JS
      =========================================================================*/
-    if ($('.skill-item').length > 0) { 
+    if ($('.skill-item').length > 0) {
       var waypoint = new Waypoint({
         element: document.getElementsByClassName('skill-item'),
         handler: function(direction) {
-          
+
           $('.progress-bar').each(function() {
-            var bar_value = $(this).attr('aria-valuenow') + '%';                
+            var bar_value = $(this).attr('aria-valuenow') + '%';
             $(this).animate({ width: bar_value }, { easing: 'linear' });
           });
 
