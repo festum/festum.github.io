@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useState } from 'react';
-import { CountUp } from 'countup.js';
+import * as ReactSimpleMapsModule from 'react-simple-maps';
 import { useInView } from 'react-intersection-observer';
 import * as ReactScrollModule from 'react-scroll';
 
@@ -20,43 +20,59 @@ type Experience = {
   summary: string;
 };
 
-type Fact = {
-  icon: string;
-  value: number;
-  label: string;
-};
 
 const skills: Skill[] = [
-  { name: 'Go', percent: 95 },
-  { name: 'Python', percent: 80 },
-  { name: 'Kubernetes & Docker', percent: 85 },
-  { name: 'AWS', percent: 70 },
-  { name: 'Git & CI/CD', percent: 90 },
-  { name: 'TypeScript', percent: 70 },
+  { name: 'Go · Python · TypeScript', percent: 85 },
+  { name: 'LLM & Agentic Systems', percent: 90 },
+  { name: 'Kubernetes · Docker · AWS', percent: 82 },
+  { name: 'CI/CD & DevOps', percent: 90 },
+  { name: 'PostgreSQL · MySQL · NoSQL', percent: 70 },
 ];
 
 const services: Service[] = [
-  { icon: 'icon-globe', title: 'Development', description: 'Making backend system in Go/Python/PHP.' },
-  { icon: 'icon-chemistry', title: 'Build', description: 'Setup any OpenSource system, DNS and VPS included.' },
-  { icon: 'icon-directions', title: 'Deployment', description: 'Make a auto deployment pipeline solution.' },
-  { icon: 'icon-rocket', title: 'Refactoring', description: 'Replace legacy with modern solution.' },
-  { icon: 'icon-note', title: 'Architect', description: 'Design a solution with any industry size.' },
-  { icon: 'icon-bubbles', title: 'Support', description: 'Your best consultant. Ask me for any questions.' },
+  { icon: 'icon-rocket', title: 'LLM Integration', description: 'Production AI agents and agentic workflows wired into real systems — MCP servers, agent memory, enterprise-safe pipelines. Not demos.' },
+  { icon: 'icon-note', title: 'Enterprise Architecture', description: 'Distributed systems for regulated environments and real scale. From FinTech payment infrastructure to cloud-native SaaS.' },
+  { icon: 'icon-chemistry', title: 'Cloud & SaaS', description: 'AWS, Kubernetes, Terraform — code to cluster. CI/CD pipelines that make production deployments uneventful.' },
+  { icon: 'icon-directions', title: 'System Transformation', description: 'Replace the engine while the plane flies. Monolith decomposition and rewrites shipped without downtime.' },
+  { icon: 'icon-globe', title: 'Europe Entry', description: 'Expanding a product or company into Europe? FinTech compliance, regulatory navigation, and practical market setup — across 4 countries of firsthand experience.' },
+  { icon: 'icon-bubbles', title: 'Overseas Navigation', description: 'Tax optimisation, residency pathways, Asia → Europe relocation strategy. Ask before paying a consultant €300/hr for the same answers.' },
 ];
 
 const experiences: Experience[] = [
-  { period: '2019 - Present', company: 'PPRO - Software Developer', summary: 'Solving complex problem in Fintech company' },
-  { period: '2018 - 2019', company: 'Coosto - Sr.Data Engineer', summary: 'Handling job vacancy data pipeline' },
-  { period: '2017 - 2018', company: 'CGG - Principle Engineer', summary: 'Building data warehouse for financial packages' },
-  { period: '2014 - 2017', company: 'TrendMicro - Sr. Engineer', summary: 'Developing security system for home IoT' },
-  { period: '2011 - 2014', company: 'III - Cloud Developer', summary: 'Developing cloud storage with NAS solution' },
+  { period: '2019 - Present', company: 'PPRO · Software Engineer', summary: 'Deep inside European payment infrastructure — a mesh of microservices moving money for millions of merchants, built not to fail. Automation runs deep: most code ships from AI, engineers steer the architecture.' },
+  { period: '2018 - 2019', company: 'Coosto · Sr. Data Engineer', summary: 'Built machines that read the internet at scale — billions of signals a day, harvested without leaving a footprint. Infrastructure that learns, adapts, and doesn\'t get stopped.' },
+  { period: '2017 - 2018', company: 'CGG · Principal Engineer', summary: 'Crossed the sea to Hong Kong at 33. Architected the data foundations beneath Asia-Pacific\'s largest financial comparison network.' },
+  { period: '2014 - 2017', company: 'Trend Micro · Sr. Engineer', summary: 'Shipped security into Japan\'s connected homes at national scale — millions of IoT devices, high-traffic infrastructure built to hold. The threats arrived later.' },
+  { period: '2011 - 2014', company: 'III · Cloud Developer', summary: 'Built the cloud storage layer beneath millions of users — seamlessly integrated with NAS, invisible and indispensable. The kind of infrastructure people trust without thinking about it.' },
 ];
 
-const facts: Fact[] = [
-  { icon: 'icon-like', value: 119, label: 'Projects completed' },
-  { icon: 'icon-cup', value: 10, label: 'Years of tea' },
-  { icon: 'icon-emotsmile', value: 89, label: 'Happy customers' },
-  { icon: 'icon-trophy', value: 45, label: 'Daily commits' },
+
+type JourneyStop = {
+  name: string;
+  label: string;
+  emoji: string;
+  period: string;
+  coords: [number, number];
+  current?: boolean;
+  anchor?: 'start' | 'middle' | 'end';
+  labelOffset?: [number, number];
+};
+
+const geoUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
+
+const journeyStops: JourneyStop[] = [
+  { name: 'Taipei',     label: 'Taiwan',      emoji: '🇹🇼', period: '~ 2017', coords: [121.56, 25.03], anchor: 'middle', labelOffset: [0, -16]  },
+  { name: 'Hong Kong', label: 'Hong Kong',   emoji: '🇭🇰', period: '2017 – 2018', coords: [114.17, 22.32], anchor: 'end',    labelOffset: [-8, 18]  },
+  { name: 'Eindhoven', label: 'Netherlands', emoji: '🇳🇱', period: '2018 – 2019', coords: [5.47,   51.44], anchor: 'end',    labelOffset: [-8, -16] },
+  { name: 'Munich',    label: 'Germany',     emoji: '🇩🇪', period: '2019 – Now',  coords: [11.58,  48.14], anchor: 'start',  labelOffset: [8, -16],  current: true },
+];
+
+type Slide = { category: string; text: string };
+const aboutSlides: Slide[] = [
+  { category: 'Origins',      text: 'Writing code since 2002. Hundreds of websites shipped before most people had a smartphone — e-commerce platforms, creative tools, internal systems. The foundation everything else is built on.' },
+  { category: 'Recognition', text: "Built YouSteez, an online SVG vector logo editor, and placed 2nd at the International ICT Innovative Services Contest. Later won Gold and Silver at iENA Nuremberg — one of the world's largest invention fairs." },
+  { category: 'Tax',         text: 'Optimised a personal German tax return to nearly \u20ac4,000 back in a single year. Regular years consistently return over \u20ac1,000 — without an accountant.' },
+  { category: 'AI Workforce', text: 'Four Hermes Agent teams running in parallel. Projects move from idea to live in one to a few weeks — because most of the execution is already delegated.' },
 ];
 
 type ContactState = 'idle' | 'sending' | 'sent' | 'error';
@@ -71,6 +87,12 @@ const socialLinkClass = 'inline-flex transition-transform duration-200 hover:-tr
 const ctaClass = 'transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg';
 const ScrollLink = (ReactScrollModule as any).Link ?? (ReactScrollModule as any).default?.Link;
 const animateScroll = (ReactScrollModule as any).animateScroll ?? (ReactScrollModule as any).default?.animateScroll;
+const ComposableMap = (ReactSimpleMapsModule as any).ComposableMap ?? (ReactSimpleMapsModule as any).default?.ComposableMap;
+const Geographies = (ReactSimpleMapsModule as any).Geographies ?? (ReactSimpleMapsModule as any).default?.Geographies;
+const Geography = (ReactSimpleMapsModule as any).Geography ?? (ReactSimpleMapsModule as any).default?.Geography;
+const Marker = (ReactSimpleMapsModule as any).Marker ?? (ReactSimpleMapsModule as any).default?.Marker;
+const Line = (ReactSimpleMapsModule as any).Line ?? (ReactSimpleMapsModule as any).default?.Line;
+const ZoomableGroup = (ReactSimpleMapsModule as any).ZoomableGroup ?? (ReactSimpleMapsModule as any).default?.ZoomableGroup;
 const avatarPath = './assets/images/avatar.svg';
 
 export default function App() {
@@ -78,8 +100,8 @@ export default function App() {
   const [preloading, setPreloading] = useState(true);
   const [showBackTop, setShowBackTop] = useState(false);
   const [contactState, setContactState] = useState<ContactState>('idle');
+  const [aboutSlideIndex, setAboutSlideIndex] = useState(0);
   const { ref: skillsRef, inView: skillsInView } = useInView({ threshold: 0.35, triggerOnce: true });
-  const { ref: factsRef, inView: factsInView } = useInView({ threshold: 0.35, triggerOnce: true });
 
   useEffect(() => {
     const timer = window.setTimeout(() => setPreloading(false), 350);
@@ -92,21 +114,20 @@ export default function App() {
     onScroll();
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
   useEffect(() => {
-    if (!factsInView) {
+    if (aboutSlides.length <= 1) {
       return;
     }
 
-    const counters = document.querySelectorAll<HTMLElement>('[data-count-to]');
-    counters.forEach((counter) => {
-      const end = Number(counter.dataset.countTo ?? '0');
-      const animator = new CountUp(counter, end, { duration: 2 });
+    const slideTimer = window.setInterval(() => {
+      setAboutSlideIndex((index) => (index + 1) % aboutSlides.length);
+    }, 3000);
 
-      if (!animator.error) {
-        animator.start();
-      }
-    });
-  }, [factsInView]);
+    return () => window.clearInterval(slideTimer);
+  }, []);
+
+
 
   const onContactSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -153,7 +174,7 @@ export default function App() {
             <span />
             <span />
           </button>
-          <ScrollLink to="home" className="logo transition-transform duration-300 hover:scale-105" {...scrollConfig} onClick={() => setMenuOpen(false)}><img className="avatar-twilight" src={avatarPath} alt="Festum Qin" /></ScrollLink>
+          <ScrollLink to="home" className="logo transition-transform duration-300 hover:scale-105" {...scrollConfig} onClick={() => setMenuOpen(false)}><img className="avatar-left-panel" src={avatarPath} alt="Festum Qin" /></ScrollLink>
           <ScrollLink to="home" className="site-title dot ml-2 transition-colors duration-300" {...scrollConfig} onClick={() => setMenuOpen(false)}>
             Festum Qin
           </ScrollLink>
@@ -164,11 +185,11 @@ export default function App() {
             <span aria-hidden="true">&times;</span>
           </button>
           <div className="header-inner d-flex align-items-start flex-column">
-            <ScrollLink to="home" {...scrollConfig} onClick={() => setMenuOpen(false)}><img className="avatar-twilight" src={avatarPath} alt="Festum Qin" /></ScrollLink>
+            <ScrollLink to="home" {...scrollConfig} onClick={() => setMenuOpen(false)}><img className="avatar-left-panel" src={avatarPath} alt="Festum Qin" /></ScrollLink>
             <ScrollLink to="home" className="site-title dot mt-3 transition-colors duration-300" {...scrollConfig} onClick={() => setMenuOpen(false)}>
               Festum Qin
             </ScrollLink>
-            <span className="site-slogan">Pro Dev</span>
+            <span className="site-slogan">LLM · Enterprise · Cloud SaaS</span>
 
             <nav>
               <ul className="vertical-menu scrollspy">
@@ -204,11 +225,11 @@ export default function App() {
               <ul className="social-icons list-inline">
                 <li className="list-inline-item"><a href="https://github.com/festum" className={socialLinkClass}><i className="fab fa-github" /></a></li>
                 <li className="list-inline-item"><a href="https://linkedin.com/in/festum" className={socialLinkClass}><i className="fab fa-linkedin" /></a></li>
-                <li className="list-inline-item"><a href="https://twitter.com/festum" className={socialLinkClass}><i className="fab fa-twitter" /></a></li>
+                <li className="list-inline-item"><a href="https://x.com/festum" className={socialLinkClass}><i className="fab fa-twitter" /></a></li>
                 <li className="list-inline-item"><a href="https://fesqin.t.me" className={socialLinkClass}><i className="fab fa-telegram" /></a></li>
                 <li className="list-inline-item"><a href="https://paypal.me/frqin" className={socialLinkClass}><i className="fab fa-paypal" /></a></li>
               </ul>
-              <span className="copyright">© 2023 FesQin</span>
+              <span className="copyright">© {new Date().getFullYear()} FesQin</span>
             </div>
           </div>
         </header>
@@ -224,12 +245,10 @@ export default function App() {
                 I’m Festum Qin<span className="dot" />
               </h1>
               <p className="mb-4">
-                A skilled and motivated developer with proven expertise in using Go, Python, gRPC, AWS, Kubernetes and other
-                technologies working with continuous integration. Being a fast learner, I always use new technology to drive improvements
-                throughout an entire software development lifecycle.
+                Sixteen years building systems that handle real money, real traffic, real consequences — across four countries. Now in Munich, at the frontier of enterprise infrastructure and AI engineering. The same instinct carries over: tax structures, overseas moves, European expansion. If it's a system, it can be figured out.
               </p>
-              <a href="https://linkedin.com/in/festum" className={`btn btn-default btn-lg mr-3 ${ctaClass}`}>
-                <i className="icon-grid" />View Portfolio
+              <a href="https://github.com/festum" className={`btn btn-default btn-lg mr-3 ${ctaClass}`}>
+                <i className="fab fa-github" />GitHub
               </a>
               <div className="spacer d-md-none d-lg-none d-sm-none" style={{ height: 10 }} />
               <ScrollLink to="contact" className={`btn btn-border-light btn-lg ${ctaClass}`} {...scrollConfig} onClick={() => setMenuOpen(false)}><i className="icon-envelope" />Work with me
@@ -239,7 +258,7 @@ export default function App() {
           </section>
 
           <section id="about" className="shadow-blue white-bg padding">
-            <h3 className="section-title">About Me</h3>
+            <h3 className="section-title">About</h3>
             <div className="spacer" style={{ height: 80 }} />
 
             <div className="row">
@@ -247,21 +266,29 @@ export default function App() {
                 <img className="avatar-twilight" src={avatarPath} alt="about" />
               </div>
               <div className="col-md-9">
-                <h2 className="mt-4 mt-md-0 mb-4">Hello,</h2>
-                <p className="mb-0">
-                  I am a software developer from Taipei. Worked in Taiwan, Hong Kong, Netherlands, and Germany. I have 15 years extensive
-                  industry and full life cycle experience in an IT environment both as a full stack developer, along with exceptional
-                  analytical, designing and problem-solving capabilities.
-                </p>
-                <div className="row my-4">
-                  <div className="col-md-6">
-                    <p className="mb-2">Name: <span className="text-dark">Festum Qin</span></p>
+                <div className="about-slider mt-4 mt-md-0">
+                  <div className="about-slider-track">
+                    {aboutSlides.map((slide, index) => (
+                      <div key={slide.category} className={`testimonial-item about-slider-item about-slide ${index === aboutSlideIndex ? 'active' : ''}`.trim()}>
+                        <span className="symbol text-indigo-500">{slide.category}</span>
+                        <p>{slide.text}</p>
+                      </div>
+                    ))}
                   </div>
-                  <div className="col-md-6 mt-2 mt-md-0 mt-sm-2">
-                    <p className="mb-2">Location: <span className="text-dark">Munich, DE</span></p>
-                    <p className="mb-0">Email: <span className="text-dark">im@fesq.in</span></p>
+                  <div className="about-slider-dots" role="tablist" aria-label="About slides">
+                    {aboutSlides.map((slide, index) => (
+                      <button
+                        key={slide.category}
+                        type="button"
+                        className={`about-slider-dot ${index === aboutSlideIndex ? 'active' : ''}`.trim()}
+                        aria-label={`Go to slide ${index + 1}`}
+                        aria-current={index === aboutSlideIndex}
+                        onClick={() => setAboutSlideIndex(index)}
+                      />
+                    ))}
                   </div>
                 </div>
+
                 <a href="https://drive.google.com/file/d/1tiIr3L8ER-HR-LYukfSmH9cRkGTMg1e-/view" className="btn btn-default mr-3">
                   <i className="icon-cloud-download" />Download CV
                 </a>
@@ -273,9 +300,9 @@ export default function App() {
           </section>
 
           <section id="skills" className="shadow-blue white-bg padding" ref={skillsRef}>
-            <h3 className="section-title">My skills</h3>
+            <h3 className="section-title">Stack</h3>
             <div className="spacer" style={{ height: 80 }} />
-            <p className="mb-0">I start programming from 2002, and switched to fully backend domain since 2014, thus web design is no longer apply to me.</p>
+            <p className="mb-0">Started in 2002. Went deep on backend systems by 2014. The interesting work now sits where production engineering meets AI.</p>
 
             <div className="row mt-5">
               {skills.map((skill) => (
@@ -302,41 +329,103 @@ export default function App() {
             </div>
           </section>
 
-          <section id="facts" className="shadow-dark color-white padding-50" ref={factsRef}>
-            <div className="row relative z-1">
-              {facts.map((fact) => (
-                <div className="col-md-3 col-sm-6" key={fact.label}>
-                  <div className="fact-item text-center">
-                    <i className={`${fact.icon} icon-circle`} />
-                    <h2 className="count" data-count-to={fact.value}>0</h2>
-                    <span>{fact.label}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
           <section id="services" className="shadow-blue white-bg padding">
             <h3 className="section-title">Services</h3>
             <div className="spacer" style={{ height: 80 }} />
 
-            <div className="row">
+            <div className="row services-grid">
               {services.map((service) => (
-                <div className="col-md-4 col-sm-6" key={service.title}>
+                <div className="col-md-4 col-sm-6 mb-4 service-card-column" key={service.title}>
                   <div className="service-item text-center">
                     <i className={`${service.icon} icon-simple`} />
                     <h4 className="my-3">{service.title}</h4>
                     <p className="mb-0">{service.description}</p>
                   </div>
-                  <div className="spacer" style={{ height: 20 }} />
                 </div>
               ))}
             </div>
           </section>
 
           <section id="resume" className="shadow-blue white-bg padding">
-            <h3 className="section-title">Experience</h3>
+            <h3 className="section-title">Journey</h3>
             <div className="spacer" style={{ height: 80 }} />
+
+            <div
+              className="journey-map-wrap"
+              onWheel={(event) => event.preventDefault()}
+              onMouseDown={(event) => event.preventDefault()}
+              onPointerDown={(event) => event.preventDefault()}
+              onTouchStart={(event) => event.preventDefault()}
+              style={{ borderRadius: 12, overflow: 'hidden', background: '#0f172a', border: '1px solid #1e293b', marginBottom: 48 }}
+            >
+              <ComposableMap
+                projection="geoNaturalEarth1"
+                projectionConfig={{ center: [65, 35], scale: 185 }}
+                style={{ width: '100%', height: 'auto' }}
+              >
+                <ZoomableGroup center={[60, 42]} zoom={1.75} disablePanning disableZooming>
+                  <Geographies geography={geoUrl}>
+                    {({ geographies }: { geographies: any[] }) =>
+                      geographies.map((geo: any) => (
+                        <Geography
+                          key={geo.rsmKey}
+                          geography={geo}
+                          fill="#1e293b"
+                          stroke="#334155"
+                          strokeWidth={0.5}
+                          style={{ default: { outline: 'none' }, hover: { outline: 'none' }, pressed: { outline: 'none' } }}
+                        />
+                      ))
+                    }
+                  </Geographies>
+
+                  {journeyStops.slice(0, -1).map((stop, i) => (
+                    <Line
+                      key={`arc-${i}`}
+                      from={stop.coords}
+                      to={journeyStops[i + 1].coords}
+                      stroke="#6366f1"
+                      strokeWidth={1.5}
+                      strokeDasharray="5 4"
+                      strokeLinecap="round"
+                    />
+                  ))}
+
+                  {journeyStops.map((stop) => (
+                    <Marker key={stop.name} coordinates={stop.coords}>
+                      {stop.current && (
+                        <circle r={14} fill="#818cf8" fillOpacity={0.2}>
+                          <animate attributeName="r" values="7;18;7" dur="2.5s" repeatCount="indefinite" />
+                          <animate attributeName="fill-opacity" values="0.2;0.04;0.2" dur="2.5s" repeatCount="indefinite" />
+                        </circle>
+                      )}
+                      <circle
+                        r={stop.current ? 7 : 5}
+                        fill={stop.current ? '#818cf8' : '#6366f1'}
+                        stroke="#0f172a"
+                        strokeWidth={1.5}
+                      />
+                      <text
+                        x={stop.labelOffset?.[0] ?? 0}
+                        y={stop.labelOffset?.[1] ?? -14}
+                        textAnchor={stop.anchor ?? 'middle'}
+                        style={{ fontSize: 10, fill: '#e2e8f0', fontFamily: 'sans-serif', fontWeight: 600, pointerEvents: 'none' }}
+                      >
+                        {stop.emoji} {stop.label}
+                      </text>
+                      <text
+                        x={stop.labelOffset?.[0] ?? 0}
+                        y={(stop.labelOffset?.[1] ?? -14) + 11}
+                        textAnchor={stop.anchor ?? 'middle'}
+                        style={{ fontSize: 9, fill: '#94a3b8', fontFamily: 'sans-serif', pointerEvents: 'none' }}
+                      >
+                        {stop.period}
+                      </text>
+                    </Marker>
+                  ))}
+                </ZoomableGroup>
+              </ComposableMap>
+            </div>
 
             <div className="timeline">
               {experiences.map((item) => (
@@ -355,11 +444,11 @@ export default function App() {
           </section>
 
           <section id="contact" className="shadow-blue white-bg padding pico">
-            <h3 className="section-title">Get in <a href="https://teleport.org/users/festum/">touch</a></h3>
+            <h3 className="section-title">Get in <a href="https://fesqin.t.me/">touch</a></h3>
             <div className="spacer" style={{ height: 80 }} />
 
             <div className="row">
-              <div className="col-md-4 mb-4 mb-md-0">
+              <div className="col-md-4 mb-4 mb-md-0 contact-details-column">
                 <div className="contact-info mb-5">
                   <i className="icon-phone" />
                   <div className="details">
@@ -378,12 +467,12 @@ export default function App() {
                   <i className="icon-location-pin" />
                   <div className="details">
                     <h5>Location</h5>
-                    <span>St.-Bonifatius-Str.</span>
+                    <span>Obergiesing</span>
                   </div>
                 </div>
               </div>
 
-              <div className="col-md-8">
+              <div className="col-md-8 contact-form-column">
                 <form id="contact-form" className="contact-form" onSubmit={onContactSubmit}>
                   <div className="messages">
                     {contactState === 'sent' ? (
