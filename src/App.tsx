@@ -229,7 +229,7 @@ export default function App() {
                 <li className="list-inline-item"><a href="https://fesqin.t.me" className={socialLinkClass}><i className="fab fa-telegram" /></a></li>
                 <li className="list-inline-item"><a href="https://paypal.me/frqin" className={socialLinkClass}><i className="fab fa-paypal" /></a></li>
               </ul>
-              <span className="copyright">© {new Date().getFullYear()} FesQin</span>
+              <span className="copyright">© {new Date().getFullYear()} FesQin &middot; <a href="./privacy" className="underline">Privacy Policy</a></span>
             </div>
           </div>
         </header>
