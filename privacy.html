@@ -69,7 +69,11 @@
           </p>
           <ul>
             <li><code>stroke</code> and <code>shadow</code> &mdash; the global rendering values.</li>
-            <li><code>sites</code> &mdash; per-site overrides you create.</li>
+            <li>
+              <code>sites</code> &mdash; per-site overrides you create. Each entry holds the domain
+              name of the site together with the values you set for it. A domain name is stored only
+              for sites where you choose to add an override.
+            </li>
           </ul>
           <p>
             These are the only values written to storage. They are kept in the
@@ -82,12 +86,18 @@
           <h2>Data the extension does not collect</h2>
           <p>The extension does not collect, store, or transmit:</p>
           <ul>
-            <li>Browsing history, or the addresses of pages you open.</li>
+            <li>Browsing history, or the full addresses of pages you open.</li>
             <li>The content of the pages you view.</li>
             <li>Form entries, passwords, or files.</li>
             <li>Your identity, location, or device details.</li>
             <li>Usage statistics, crash reports, or diagnostics.</li>
           </ul>
+          <p>
+            To decide whether an override applies, the extension reads the domain name of the page you
+            are on. That domain is used in memory to look up your settings and is not recorded, except
+            when you deliberately add an override for that site, in which case the domain is stored as
+            described above. The full addresses of the pages you visit are never read or stored.
+          </p>
           <p>
             The extension makes no network requests. Nothing is sent to the developer or to any third
             party, and nothing is sold or shared for advertising or any other purpose. All processing
@@ -150,7 +160,7 @@
             <a href="mailto:im@fesq.in">im@fesq.in</a>.
           </p>
 
-          <p><em>Last updated: 19 October 2026</em></p>
+          <p><em>Last updated: 20 October 2026</em></p>
         </section>
       </main>
     </div>
