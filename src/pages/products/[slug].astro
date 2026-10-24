@@ -1,0 +1,47 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('products', ({ data }) =>
+    import.meta.env.DEV ? true : !data.draft
+  );
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.tagline}>
+  <section class="py-24 md:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="max-w-[68ch]">
+        <Eyebrow text="Product" />
+        <h1 class="font-display text-5xl mt-6">
+          {entry.data.title}{entry.data.status === 'in-progress' && <span class="ml-3 text-[0.65rem] uppercase tracking-[0.25em] text-champagne border border-champagne/40 px-2 py-0.5 align-middle">In development</span>}
+        </h1>
+        <p class="text-mist text-lg mt-4">{entry.data.tagline}</p>
+
+        <div class="prose-article mt-10">
+          <Content />
+        </div>
+
+        {entry.data.externalUrl && (
+          <a
+            href={entry.data.externalUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-block mt-10 border border-champagne/60 text-champagne px-6 py-3 text-sm tracking-wide hover:border-champagne transition-colors"
+          >
+            Visit →
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

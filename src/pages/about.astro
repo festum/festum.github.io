@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+---
+
+<BaseLayout
+  title="About"
+  description="Fesq is an independent applied research group."
+>
+  <section class="py-24 md:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="max-w-[68ch]">
+        <Eyebrow text="About" />
+        <h1 class="font-display text-5xl mt-6">A group, by design.</h1>
+
+        <div class="prose-article mt-10">
+          <p>Fesq is an independent applied research group. We take on work where engineering depth matters more than visibility — intelligent systems, payment infrastructure, cloud platforms.</p>
+          <p>We do not publish a roster. We do not run keynotes. What we do publish is what we build, and what we learn building it.</p>
+          <p>The people behind Fesq have spent decades inside production systems that move real money and serve real traffic. That experience is available — quietly.</p>
+        </div>
+
+        <a
+          href="/contact/"
+          class="inline-block mt-10 border border-champagne/60 text-champagne px-6 py-3 text-sm tracking-wide hover:border-champagne transition-colors"
+        >
+          Start a conversation →
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

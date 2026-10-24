@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
+import ProductCard from '../../components/ProductCard.astro';
+
+const entries = (await getCollection('products', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="Products"
+  description="Built, not announced. Systems in production from Fesq."
+>
+  <section class="py-24 md:py-32">
+    <div class="mx-auto max-w-6xl px-6">
+      <Eyebrow text="Products" />
+      <h1 class="font-display text-5xl mt-6">Built, not announced.</h1>
+      <p class="text-mist max-w-2xl mt-4">Systems that run in production, quietly solving real problems.</p>
+
+      {entries.length === 0 ? (
+        <p class="text-mist mt-12">Products coming soon.</p>
+      ) : (
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+          {entries.map((entry) => (
+            <ProductCard
+              title={entry.data.title}
+              tagline={entry.data.tagline}
+              href={entry.data.externalUrl ?? `/products/${entry.id}/`}
+              external={!!entry.data.externalUrl}
+              status={entry.data.status}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

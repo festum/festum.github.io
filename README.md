@@ -1,72 +1,43 @@
-# festum.github.io
+# Fesq — fesq.in
 
-Personal portfolio website, migrated to React + TypeScript and managed with Bun.
-
-## Stack
-
-- React 18
-- TypeScript
-- Vite (dev server)
-- Bun build pipeline for deploy output
-- Pico CSS + Tailwind utilities/transitions
-- Effects: `react-scroll`, `countup.js`, `react-intersection-observer`
-
-## Structure
-
-```text
-.
-├── CNAME
-├── dev.html
-├── index.html                 # deploy entry (generated)
-├── package.json
-├── bun.lock
-├── tailwind.config.cjs
-├── scripts/
-│   └── publish-static.mjs
-├── assets/                    # deploy assets (generated)
-├── public/
-│   └── assets/                # source static resources
-└── src/
-    ├── App.tsx
-    ├── main.tsx              # dev entry
-    ├── main.file.tsx         # file/http deploy bundle entry
-    ├── tailwind.input.css
-    ├── theme.css             # dev styling imports
-    └── file-overrides.css    # deploy dark-mode/override styles
-```
+Official site for Fesq — fesq.in. Built with Astro, deployed to GitHub Pages.
 
 ## Local development
 
-```bash
+```sh
 bun install
 bun run dev
 ```
 
-Open `http://127.0.0.1:5173/dev.html`.
+Open http://localhost:4321.
 
 ## Build
 
-```bash
+```sh
 bun run build
 ```
 
-Build steps:
-- compile Tailwind utilities to `dist/tailwind.css`
-- bundle React app to `dist/app.js` (IIFE)
-- publish generated `index.html` + slim `assets/` to repo root
+Output lands in `dist/`.
 
 ## Deploy
 
-This repository is served as static files directly from `main`, so run `bun run build` before pushing.
+Push to `main` triggers the GitHub Actions workflow that builds and deploys to GitHub Pages.
 
-## Static access
+## How to add a product
 
-- `file:///.../index.html` works.
-- `http://...` static hosting (including GitHub Pages) works.
+Add a new markdown file to `src/content/products/`:
 
-## Maintenance
+```markdown
+---
+title: Product name
+tagline: One-line summary for cards.
+order: 7
+status: live
+---
 
-- Keep source media/font/vendor files in `public/assets`.
-- Keep app logic in `src`.
-- Keep behavioral effects in React libraries, not legacy jQuery plugins.
+Body text describing the product.
+```
 
+`status` is `live` or `in-progress` (shown as an "In development" badge). Optional `externalUrl` makes the product card link out instead of to a detail page.
+
+Journal (blog) lives in the fesq-blog repo — https://blog.fesq.in.

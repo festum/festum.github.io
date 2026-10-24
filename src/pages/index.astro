@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HomePage from '../components/home/HomePage.tsx';
+---
+
+<BaseLayout
+  title="Fesq — Applied Research Group"
+  description="An independent research group working on large language models: smaller, quieter, better tuned."
+  variant="transparent"
+>
+  <HomePage client:load />
+</BaseLayout>
