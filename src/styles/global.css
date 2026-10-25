@@ -152,6 +152,74 @@
     opacity: 0;
   }
 }
+.bamboo-sway {
+  animation: sway 12s ease-in-out infinite alternate;
+}
+@keyframes sway {
+  from {
+    transform: rotate(-0.6deg);
+  }
+  to {
+    transform: rotate(0.7deg);
+  }
+}
+.koi {
+  position: absolute;
+  left: 0;
+  top: 0;
+  offset-rotate: auto;
+  will-change: offset-distance;
+  animation: koi-swim linear infinite;
+}
+@keyframes koi-swim {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+.koi-tail {
+  transform-box: fill-box;
+  transform-origin: right center;
+  animation: tail-wag 1.6s ease-in-out infinite alternate;
+}
+@keyframes tail-wag {
+  from {
+    transform: rotate(-14deg);
+  }
+  to {
+    transform: rotate(14deg);
+  }
+}
+.zen-mist {
+  position: absolute;
+  height: 18rem;
+  width: 60rem;
+  filter: blur(2.5rem);
+  opacity: 0.35;
+  animation: mist-drift 36s ease-in-out infinite alternate;
+}
+.zen-mist-1 {
+  top: 38%;
+  left: -12rem;
+  background: radial-gradient(ellipse, rgba(232,218,190,0.07), transparent 70%);
+}
+.zen-mist-2 {
+  bottom: 4rem;
+  right: -14rem;
+  background: radial-gradient(ellipse, rgba(222,190,126,0.06), transparent 70%);
+  animation-duration: 44s;
+  animation-delay: -12s;
+}
+@keyframes mist-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(8rem);
+  }
+}
 @keyframes glow-drift {
   from {
     transform: translate(0, 0);
@@ -170,7 +238,14 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .zen-glow {
+  .zen-glow,
+  .bamboo-sway,
+  .koi,
+  .koi-tail,
+  .zen-mist {
     animation: none;
+  }
+  .koi {
+    display: none;
   }
 }
