@@ -132,17 +132,6 @@
   animation-delay: 2.1s;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .drop {
-    animation: none;
-    transform: translate(-50%, -50%);
-  }
-  .ripple-ring {
-    animation: none;
-    transform: translate(-50%, -50%) scale(0.6);
-    opacity: 0.5;
-  }
-}
 @keyframes ripple-expand {
   0% {
     transform: translate(-50%, -50%) scale(0);
@@ -239,20 +228,5 @@
   }
   50% {
     opacity: 1;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .zen-glow,
-  .bamboo-sway,
-  .koi,
-  .koi-tail,
-  .zen-mist {
-    animation: none;
-  }
-  .koi:nth-child(1) {
-    offset-distance: 22%;
-  }
-  .koi:nth-child(2) {
-    offset-distance: 70%;
   }
 }

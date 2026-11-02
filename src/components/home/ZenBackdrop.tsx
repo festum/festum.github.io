@@ -121,8 +121,6 @@ export default function ZenBackdrop() {
   const timers = useRef<number[]>([]);
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
     const onClick = (e: MouseEvent) => {
       const host = rootRef.current;
       if (!host) return;
